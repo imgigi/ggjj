@@ -1,6 +1,7 @@
 import React from 'react';
 import { SOPStep } from '../types';
 import { FileText, FolderArchive, Link as LinkIcon, MessageCircle, CheckCircle2 } from 'lucide-react';
+import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 
 const steps: SOPStep[] = [
   {
@@ -41,17 +42,19 @@ const steps: SOPStep[] = [
 ];
 
 const SOPGuide: React.FC = () => {
+  const [ref, isVisible] = useIntersectionObserver(0.15);
+
   return (
     <div id="sop" className="relative bg-[#0B1121] py-24 overflow-hidden">
       {/* Background Gradients */}
-      <div className="absolute top-0 right-0 -mr-40 -mt-40 w-[600px] h-[600px] bg-blue-900/20 rounded-full blur-[120px]"></div>
-      <div className="absolute bottom-0 left-0 -ml-40 -mb-40 w-[600px] h-[600px] bg-indigo-900/20 rounded-full blur-[120px]"></div>
+      <div className="absolute top-0 right-0 -mr-40 -mt-40 w-[600px] h-[600px] bg-blue-900/20 rounded-full blur-[120px] animate-pulse"></div>
+      <div className="absolute bottom-0 left-0 -ml-40 -mb-40 w-[600px] h-[600px] bg-indigo-900/20 rounded-full blur-[120px] animate-pulse animation-delay-2000"></div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10" ref={ref}>
         <div className="lg:grid lg:grid-cols-2 lg:gap-20 items-start">
           
           {/* Left Side: The "Chat" Concept */}
-          <div className="mb-16 lg:mb-0 sticky top-24">
+          <div className={`mb-16 lg:mb-0 sticky top-24 transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
             <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#1E293B] border border-slate-700/50 text-blue-400 text-xs font-bold uppercase tracking-wide mb-8 shadow-sm">
               <MessageCircle className="w-3.5 h-3.5 mr-2" />
               SIMPLE PROCESS
@@ -68,9 +71,9 @@ const SOPGuide: React.FC = () => {
             </p>
 
             {/* Glassmorphism Chat Bubble */}
-            <div className="bg-[#151E32] rounded-3xl p-8 relative shadow-2xl border border-slate-700/50">
+            <div className="bg-[#151E32] rounded-3xl p-8 relative shadow-2xl border border-slate-700/50 hover:border-blue-500/30 transition-colors duration-500">
                {/* Floating Hand Emoji */}
-               <div className="absolute -top-5 -left-5 w-14 h-14 bg-[#3B82F6] rounded-2xl flex items-center justify-center shadow-lg transform -rotate-6 z-10 border-4 border-[#0B1121]">
+               <div className="absolute -top-5 -left-5 w-14 h-14 bg-[#3B82F6] rounded-2xl flex items-center justify-center shadow-lg transform -rotate-6 z-10 border-4 border-[#0B1121] animate-wave origin-bottom-right">
                  <span className="text-3xl">👋</span>
                </div>
                
@@ -100,10 +103,11 @@ const SOPGuide: React.FC = () => {
 
           {/* Right Side: Structured Cards */}
           <div className="space-y-6">
-            {steps.map((step) => (
+            {steps.map((step, index) => (
               <div 
                 key={step.id} 
-                className="group relative bg-[#151E32] rounded-2xl p-7 border border-slate-800 hover:border-blue-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-blue-900/5"
+                className={`group relative bg-[#151E32] rounded-2xl p-7 border border-slate-800 hover:border-blue-500/30 transition-all duration-700 hover:shadow-xl hover:shadow-blue-900/5 transform ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}
+                style={{ transitionDelay: `${index * 200 + 300}ms` }}
               >
                 <div className="absolute top-6 right-6 text-slate-700 font-mono text-sm font-bold opacity-50">
                   0{step.id}
